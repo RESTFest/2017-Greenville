@@ -1,0 +1,51 @@
+---
+layout: post
+title:  "Hackaton!"
+date:   2017-09-14 09:52:07 -0400
+categories: jekyll update
+---
+
+API URL: [http://localhost:4567/resources](http://localhost:4567/resources)
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">  
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+<style>
+{% include styles.css %}
+</style>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $('#dataTable').DataTable();
+	});
+</script>
+
+<div>
+<table id="dataTable">
+  <thead>
+    <tr>
+      {% assign columns = site.data.apibox.collection.items[0].data.size %}
+      {% for data in site.data.apibox.collection.items[0].data %}
+      {% unless data.name == '_source' %}
+        <th>{{data.name}}</th>
+      {% endunless %}
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in site.data.apibox.collection.items %}
+    {% if item.data.size == columns %}
+    <tr>
+      {% for data in item.data %}
+      {% unless data.name == '_source' %}
+        <td>{{data.value}}</td>
+      {% endunless %}
+      {% endfor %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+</div>

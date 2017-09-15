@@ -1,0 +1,84 @@
+---
+layout: post
+title:  "Hackaton 2!"
+date:   2017-09-14 09:52:07 -0400
+categories: jekyll update
+---
+### API URL: [http://localhost:4567/resources](http://localhost:4567/resources)
+
+{% assign sources = site.emptyArray %}
+
+{% for item in site.data.apibox.collection.items %}
+  {% for data in item.data %}
+    {% if data.name == 'FILE_SOURCE' %}
+      {% assign sources = sources | push: data.value %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+{% assign sources = sources | uniq %}
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">  
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+<style>
+{% include styles.css %}
+</style>
+
+{% assign counter = 0 %}
+{% for source in sources %}
+{% assign counter = counter | plus: 1 %}
+
+### DATA TABLE {{counter}}
+### SOURCE: {{source}}
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $('#dataTable{{counter}}').DataTable();
+	});
+</script>
+
+<div>
+<table id="dataTable{{counter}}">
+  <thead>
+
+{% assign isFirst = true %}
+
+{% for item in site.data.apibox.collection.items %}
+  {% for data in item.data %}
+    {% if data.name == 'FILE_SOURCE' and data.value == source %}
+
+    {% if isFirst == true %}
+    {% assign isFirst = false %}
+    <tr>
+      {% for data in item.data %}
+      {% unless data.name == '_source' %}
+        <th>{{data.name}}</th>
+      {% endunless %}
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% endif %}
+
+    <tr>
+      {% for data in item.data %}
+      {% unless data.name == '_source' %}
+        <td>{{data.value}}</td>
+      {% endunless %}
+      {% endfor %}
+    </tr>
+
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+  </tbody>
+</table>
+</div>
+
+<br><br>
+
+{% endfor %}
